@@ -13,6 +13,9 @@ everyone who walks that route afterwards is safer for it.
 
 Think of it as Waze for walkways, built for the people who need it most.
 
+### DISCLAIMER ###
+For this hackathon, the prototype is only using the phone as the medium, not the esp hardware yet for the judge to see how its infrastructure works
+
 ## Why
 
 - With a white cane, an open drain is found at arm's length, or not at all.
