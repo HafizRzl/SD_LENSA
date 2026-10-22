@@ -7,3 +7,6 @@ __pycache__/
 .claude/
 
 # lensa/ keeps its own .gitignore (models, secrets.yaml, voice cache, datasets, Android builds)
+
+# Built app (attach it to a GitHub Release instead; 68 MB)
+*.apk

@@ -9,12 +9,16 @@ import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
 import android.os.Bundle
 import android.util.Size
+import android.text.InputType
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.camera2.interop.Camera2CameraInfo
 import androidx.camera.core.CameraSelector
@@ -36,9 +40,11 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.math.atan
 
-/** LENSA v0.4 — live view + mini-map on top; PLAY | STOP and TERANGKAN | BACA below.
+/** LENSA v0.5 — live view + mini-map on top; PLAY | STOP and TERANGKAN | BACA below.
  *  Loop A (hazards) is the desktop beta's brain, ported 1:1 and offline.
- *  Loop B (describe / read a sign) is online: one photo to Gemini, on demand, even when stopped. */
+ *  Loop B (describe / read a sign) is online: one photo to Gemini, on demand, even when stopped.
+ *  Hazard map (hackathon): after passing a fixed hazard, ask to log it with GPS to the township
+ *  server; warn about hazards other walkers logged. Set the server with the PETA BAHAYA button. */
 class MainActivity : AppCompatActivity() {
     private val lang = "ms"
     private lateinit var content: Content
@@ -47,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var overlay: OverlayView
     private lateinit var speaker: Speaker
     private lateinit var loopB: LoopB
+    private lateinit var hazardMap: HazardMap
+    private lateinit var answerRow: LinearLayout
+    private lateinit var mapButton: Button
+    private var askedMapPerms = false
     private var detectors: List<Triple<Detector, IouTracker, Double>>? = null
     private var provider: ProcessCameraProvider? = null
     private var capture: ImageCapture? = null          // bound while PLAY runs (null if the phone can't)
@@ -83,6 +93,17 @@ class MainActivity : AppCompatActivity() {
         }
         overlay = OverlayView(this)
         status = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setPadding(8, 6, 8, 6) }
+        hazardMap = HazardMap(this, speaker, content.objects,
+            show = { text -> overlay.showAnswer(text, 8); runOnUiThread { status.text = text } },
+            askButtons = { on -> runOnUiThread { answerRow.visibility = if (on) View.VISIBLE else View.GONE } })
+        // the hazard map's question: answer by voice, or with these (shown only for those 5 s)
+        answerRow = row(big("YES", "Yes, log the hazard", Color.rgb(20, 120, 60)) { hazardMap.answer(true) },
+                        big("NO", "No, don't log it", Color.rgb(150, 30, 30)) { hazardMap.answer(false) })
+            .apply { visibility = View.GONE }
+        mapButton = Button(this).apply {
+            textSize = 14f; isAllCaps = false; setOnClickListener { editMapServer() }
+        }
+        showMapServer()
         setContentView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addView(FrameLayout(this@MainActivity).apply {
@@ -90,19 +111,54 @@ class MainActivity : AppCompatActivity() {
                 addView(this@MainActivity.overlay, FrameLayout.LayoutParams(-1, -1))   // not View.overlay
             }, LinearLayout.LayoutParams(-1, 0, 5f))
             addView(status, LinearLayout.LayoutParams(-1, -2))
+            addView(answerRow, LinearLayout.LayoutParams(-1, 0, 2f))
             addView(row(big("PLAY", "Mula LENSA", Color.rgb(20, 120, 60)) { play() },
                         big("STOP", "Hentikan LENSA", Color.rgb(150, 30, 30)) { stop() }), LinearLayout.LayoutParams(-1, 0, 2f))
             addView(row(big("TERANGKAN", "Terangkan sekeliling", Color.rgb(20, 70, 150)) { askB(describe = true) },
                         big("BACA", "Baca tulisan", Color.rgb(100, 40, 140)) { askB(describe = false) }), LinearLayout.LayoutParams(-1, 0, 2f))
+            addView(mapButton, LinearLayout.LayoutParams(-1, -2))
         })
         status.text = if (key == null) "Tekan PLAY untuk mula · (Loop B: tiada kunci API dalam APK ini)" else "Tekan PLAY untuk mula"
     }
 
-    private fun hasCamera() = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+    private fun showMapServer() {
+        mapButton.text = if (hazardMap.enabled) "PETA BAHAYA: ${hazardMap.url}  ·  ${hazardMap.me}"
+                         else "PETA BAHAYA: tutup · tekan untuk sambung ke pelayan"
+    }
+
+    /** The hazard server's address, e.g. 192.168.1.20:8000 (the laptop running server.py). Empty = off. */
+    private fun editMapServer() {
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+            hint = "192.168.1.20:8000"; setText(hazardMap.url)
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Pelayan peta bahaya")
+            .setMessage("Alamat yang server.py paparkan (Wi-Fi yang sama). Kosongkan untuk tutup.")
+            .setView(input)
+            .setPositiveButton("Simpan") { _, _ ->
+                hazardMap.url = input.text.toString()
+                showMapServer()
+                if (running) { hazardMap.stop(); hazardMap.start(granted(Manifest.permission.ACCESS_FINE_LOCATION)) }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    private fun granted(p: String) = ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_GRANTED
+    private fun hasCamera() = granted(Manifest.permission.CAMERA)
 
     private fun play() {
         if (running) return
-        if (!hasCamera()) { ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQ_PLAY); return }
+        // camera always; location + microphone once, if the hazard map is on (it works without them, just less)
+        val mapPerms = if (hazardMap.enabled && !askedMapPerms)
+            listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO) else emptyList()
+        val need = (listOf(Manifest.permission.CAMERA) + mapPerms).filterNot(::granted)
+        if (need.isNotEmpty()) {
+            askedMapPerms = askedMapPerms || mapPerms.isNotEmpty()
+            ActivityCompat.requestPermissions(this, need.toTypedArray(), REQ_PLAY); return
+        }
+        hazardMap.start(granted(Manifest.permission.ACCESS_FINE_LOCATION))
         running = true
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (detectors == null) status.text = "Memuatkan model & menguji enjin pantas… (sekali sahaja)"
@@ -120,6 +176,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun stop() {
         running = false
+        hazardMap.stop()
         provider?.unbindAll(); capture = null; lastFrame = null
         speaker.clear()
         overlay.clear()
@@ -135,9 +192,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(code: Int, perms: Array<out String>, results: IntArray) {
         super.onRequestPermissionsResult(code, perms, results)
-        val ok = results.firstOrNull() == PackageManager.PERMISSION_GRANTED
         when {
-            !ok -> status.text = "LENSA perlukan kamera"
+            !hasCamera() -> status.text = "LENSA perlukan kamera"   // camera is one of several asked for
             code == REQ_PLAY -> play()
             else -> status.text = "Kamera dibenarkan — tekan TERANGKAN / BACA semula"
         }
@@ -254,7 +310,8 @@ class MainActivity : AppCompatActivity() {
                 val detMs = (System.nanoTime() - t0) / 1e6
                 val boxes = all.filter { it.cls in content.objects }
                 tracks.tick()
-                val seen = dedupe(boxes).map { b ->
+                val kept = dedupe(boxes)
+                val seen = kept.map { b ->
                     val cx = (b.x1 + b.x2) / 2
                     val raw = if (content.objects.isGround(b.cls)) null else estimateDistanceM(b.y2 - b.y1)
                     val (pos, dist, spoken) = tracks.update(b.id, cx, raw)
@@ -262,6 +319,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 // confirm before speaking: only objects seen N frames in a row reach the rules
                 val detections = seen.filter { tracks.confirmed(it.trackId, content.hazard.confirmFrames) }
+                hazardMap.frame(kept.filter { tracks.confirmed(it.id, content.hazard.confirmFrames) })   // walked past one?
                 tracks.prune()
                 val (dec, line) = agent.run(detections)
                 if (gate.shouldSpeak(line, dec.urgency == "high", dec)) {
@@ -279,14 +337,14 @@ class MainActivity : AppCompatActivity() {
                 }, line, dec.urgency, "%.1f fps".format(fps), agent.map.grid, agent.map.path)
                 val engines = dets.joinToString(" + ") { (d, _, ms) -> "${d.engine} %.0fms".format(ms) }
                 runOnUiThread {
-                    if (running && !loopB.busy) status.text = "%.1f fps · kesan %.0f ms · %s · FOV %.0f°"
+                    if (running && !loopB.busy && !hazardMap.busy) status.text = "%.1f fps · kesan %.0f ms · %s · FOV %.0f°"
                         .format(fps, detMs, engines, PacmanMap.fovDeg)
                 }
             } finally { img.close() }
         }
     }
 
-    override fun onDestroy() { stop(); speaker.stop(); worker.shutdown(); photoExec.shutdown(); super.onDestroy() }
+    override fun onDestroy() { stop(); hazardMap.shutdown(); speaker.stop(); worker.shutdown(); photoExec.shutdown(); super.onDestroy() }
 
     companion object {
         const val CONF = 0.35   // detector floor; the rules then apply 0.45

@@ -177,6 +177,9 @@ class SpeechQueue {
         return p
     }
 
+    /** Only an urgent hazard line (used while the hazard map holds the voice). */
+    @Synchronized fun nextUrgent(): Item? = pending?.takeIf { it.urgent }?.also { pending = null }
+
     @Synchronized fun isEmpty() = pending == null && free == null
     @Synchronized fun clear() { pending = null; free = null }
 }
@@ -188,6 +191,8 @@ class Speaker(private val voice: Voice) {
     @Volatile private var endedAt = 0.0
     private val queue = SpeechQueue()
     @Volatile private var running = true
+    /** Set while the hazard map asks / listens / warns: only URGENT hazard lines are spoken. */
+    @Volatile var hold = false
 
     /** Seconds of silence since the last line FINISHED (0 while speaking or a line is waiting). */
     fun quietS(): Double = if (busy || !queue.isEmpty()) 0.0 else System.nanoTime() / 1e9 - endedAt
@@ -195,7 +200,7 @@ class Speaker(private val voice: Voice) {
     private val thread = Thread {
         voice.init()
         while (running) {
-            val item = queue.next()
+            val item = if (hold) queue.nextUrgent() else queue.next()
             if (item == null) { Thread.sleep(30); continue }
             busy = true
             runCatching { voice.speak(item.line, if (item.free) null else item.segments) }

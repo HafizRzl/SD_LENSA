@@ -6,11 +6,11 @@ android {
     namespace = "my.lensa"
     compileSdk = 36
     defaultConfig {
-        applicationId = "my.lensa"
+        applicationId = "my.lensa.map"   // hackathon build: installs next to the FYP app, doesn't replace it
         minSdk = 26          // Android 8.0+
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.4"
+        versionCode = 5
+        versionName = "0.5-map"
         ndk { abiFilters += listOf("arm64-v8a") }   // recent phones only — keeps the APK small
     }
     androidResources { noCompress += listOf("onnx", "wav") }   // read models/clips straight from the APK

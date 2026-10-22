@@ -1,4 +1,4 @@
-# LENSA — Android app (v0.4)
+# LENSA — Android app (v0.5, hazard map)
 
 Live view on top (camera + boxes, `#ID` labels, left/centre/right lines, pacman mini-map, spoken
 line), and a 2×2 grid of big buttons below:
@@ -13,6 +13,22 @@ The brain is the desktop beta ported 1:1 to Kotlin — `Rules.kt`, `PacmanMap.kt
 (50 scene runs, 5 map routes, both Loop B prompts, 14 sign-text cases).
 
 Not yet: the ESP32 head unit.
+
+## Hazard map (v0.5)
+A **PETA BAHAYA** button at the bottom sets the hazard map server (the laptop running `../../server.py`,
+same Wi-Fi, e.g. `192.168.1.20:8000`; empty = off). While PLAY runs, `HazardMap.kt`:
+- **Asks after you pass a fixed hazard.** A confirmed pothole / broken road / drain / open, displaced or
+  broken manhole cover that came close (box bottom below 60% of the frame) and then left the view for
+  2 s counts as passed. LENSA asks in English: *"Dangerous hazard found: pothole. Do you want to log it?"*
+  Answer "yes" / "no" (Android speech recognition) or tap the YES / NO buttons; 5 s of silence cancels.
+  One question per hazard type per 20 s.
+- **Logs it** with the phone's GPS (`POST /api/report`). Each phone has its own walker ID (shown on the button).
+- **Warns** within 30 m of hazards others logged, says when one is repaired, and thanks you for ones you
+  reported (polls `GET /api/hazards` every 5 s).
+- Hazard guidance pauses while the map talks or listens; urgent "Berhenti!/Awas!" lines still cut in.
+
+Needs camera, location and microphone permissions (asked on PLAY). The app ID is `my.lensa.map`, so it
+installs next to the FYP build instead of replacing it. Calibration knobs: `PassWatcher` in `HazardMap.kt`.
 
 ## Loop B (TERANGKAN / BACA)
 - Works **anytime**: while PLAY runs it takes a ~1600 px still from the live camera; when stopped it

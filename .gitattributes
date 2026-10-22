@@ -1,0 +1,4 @@
+# Keep LF line endings everywhere (LENSA's tests compare prompt files byte for byte),
+# even on Windows machines with core.autocrlf=true. Windows scripts stay CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf

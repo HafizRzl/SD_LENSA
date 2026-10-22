@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />   <!-- Loop B (Gemini) only -->
+    <uses-permission android:name="android.permission.INTERNET" />   <!-- Loop B (Gemini) + hazard map -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />   <!-- hazard map: where it was -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />   <!-- hazard map: "yes" / "no" -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <queries>   <!-- Android 11+: let the app find the speech recogniser -->
+        <intent><action android:name="android.speech.RecognitionService" /></intent>
+    </queries>
+    <!-- ponytail: plain HTTP so the phone can reach server.py on the laptop over Wi-Fi.
+         A hosted server would use HTTPS and this flag goes. -->
     <application
         android:label="LENSA"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".MainActivity" android:exported="true"
             android:screenOrientation="portrait">
