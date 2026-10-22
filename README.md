@@ -169,11 +169,13 @@ Run `python server.py --demo` to make a day last one minute, so you can watch a 
 
 ### Test it with the LENSA app on your phone
 
-You need the computer running `server.py` and an Android phone with the LENSA app (build it from
-`lensa/android-app`, see its README). Both must be on the same network. Public and campus Wi-Fi often
+You need the computer running `server.py` and an Android phone with the LENSA app: download
+`LENSA-map.apk` from this repository's **Releases** page (or build it from `lensa/android-app`, see its
+README). Both must be on the same network. Public and campus Wi-Fi often
 stop devices from talking to each other, so the easiest setup is the phone's own hotspot.
 
-0. **Install the app.** Copy the APK to the phone and open it (allow installing unknown apps if asked).
+0. **Install the app.** Download `LENSA-map.apk` from **Releases** on the phone (or copy it across) and
+   open it. Allow installing unknown apps if asked.
 1. **Connect.** Turn on the phone's **hotspot** and connect the computer to it.
 2. **Start the server** on the computer:
    ```bash
