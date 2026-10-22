@@ -1,0 +1,9 @@
+# Hazard map: live demo data (delete the file to reset the demo)
+hazards.db
+__pycache__/
+*.py[cod]
+
+# Claude Code local session/tooling state
+.claude/
+
+# lensa/ keeps its own .gitignore (models, secrets.yaml, voice cache, datasets, Android builds)

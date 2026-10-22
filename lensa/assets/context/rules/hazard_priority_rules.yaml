@@ -1,0 +1,30 @@
+# Hazard Priority Rules — how LENSA decides what to warn about and how urgently
+# ("closest + most dangerous first"). This is the file you'll tune most during walk tests.
+# The desktop beta hot-reloads this file while running.
+
+# Ignore detections below this confidence (0.0–1.0)
+confidence_floor: 0.45
+
+# Distance bands (metres). Closer bands = more urgent.
+distance_bands:
+  immediate_stop_below_m: 1.0   # forces action = stop
+  caution_below_m: 3.0          # warn with caution; side hazards inside this band get a steer
+  notice_below_m: 6.0           # mention it
+  ignore_above_m: 6.0           # too far to matter (unless moving toward user)
+
+# Overall sensitivity: low = quieter, high = warns earlier/more often
+sensitivity: medium             # low | medium | high
+
+# Scoring: score = danger_weight * proximity_factor * moving_multiplier
+moving_toward_multiplier: 1.5
+
+# Flat ground hazards (catalog `ground: true`) have no distance yet, so they can't reach the
+# stop band. Ones at least this dangerous get "Awas!" + high urgency instead (open manhole = 10,
+# displaced cover = 9). Set above 10 to turn this off.
+ground_alert_min_danger: 9
+
+# An object must be seen in this many frames IN A ROW before LENSA reacts to it — kills one-frame
+# ghosts (a bottle flickering in and out). At ~5 fps, 3 frames is about half a second.
+confirm_frames: 3
+
+# NOTE: repeat frequency / silence policy lives in config/audio_output_style.yaml (one owner).

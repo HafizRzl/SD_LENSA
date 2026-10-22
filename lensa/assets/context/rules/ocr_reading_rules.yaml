@@ -1,0 +1,21 @@
+# OCR Reading Rules — when LENSA reads signage text and how it announces it.
+# OCR is secondary to obstacle safety — never let it delay a hazard warning.
+
+# When to run OCR
+run_mode: on_demand            # on_demand (user asks) | signage_detected | always
+min_confidence: 0.6
+
+# What to prioritise reading
+prioritise:
+  - warning                    # e.g. "AWAS", "DILARANG MASUK"
+  - room_number
+  - signboard
+ignore_clutter: true           # skip ads / dense unrelated text
+
+# Length + language
+max_chars: 80                  # truncate very long text
+translate_to_user_language: false  # if true, translate EN signage into BM
+
+# How it's announced (uses the OCR phrase template in the phrase library)
+announce_prefix_ms: "Papan tanda"
+announce_prefix_en: "Sign"

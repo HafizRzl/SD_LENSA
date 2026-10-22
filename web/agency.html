@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LENSA Agency Update</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root { --teal:#1f8a8a; --dark:#123c40; --red:#b3261e; --cream:#f4f0e6; --card:#f1ece1; --ink:#1d2b2c; --muted:#6b7273; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui, sans-serif; background:var(--cream); color:var(--ink); }
+  header { background:var(--dark); color:#fff; padding:14px 16px; }
+  header b { letter-spacing:.08em; font-size:13px; color:#8fd3d3; }
+  header h1 { margin:4px 0 0; font-size:21px; text-transform:capitalize; }
+  main { max-width:640px; margin:0 auto; padding:16px; }
+  .chip { display:inline-block; color:#fff; font-size:12px; font-weight:700; letter-spacing:.06em; padding:4px 12px; border-radius:999px; text-transform:uppercase; }
+  dl { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; background:#fff; border-radius:12px; padding:14px; margin:12px 0; }
+  dt { color:var(--muted); }
+  dd { margin:0; font-weight:600; }
+  .late { color:var(--red); }
+  #map { height:220px; border-radius:12px; }
+  a { color:var(--teal); }
+  h2 { font-size:17px; margin:22px 0 8px; }
+  textarea { width:100%; font:inherit; padding:10px; border:1px solid #c9c2b2; border-radius:10px; }
+  .row { display:flex; gap:10px; margin-top:10px; }
+  button { flex:1; font:inherit; font-size:18px; padding:14px; border-radius:10px; border:none; background:var(--teal); color:#fff; }
+  button#started { background:var(--dark); }
+  #done { background:#2e7d32; color:#fff; padding:14px; border-radius:10px; }
+  #err { background:var(--red); color:#fff; padding:14px; border-radius:10px; }
+  ol { font-size:14px; color:var(--muted); padding-left:20px; }
+</style>
+</head>
+<body>
+<header><b>LENSA · AGENCY UPDATE</b><h1 id="title">Loading case…</h1></header>
+<main>
+  <p id="err" hidden></p>
+  <section id="case" hidden>
+    <span class="chip" id="chip"></span>
+    <dl id="facts"></dl>
+    <div id="map"></div>
+    <p><a id="gmaps" target="_blank" rel="noopener">Open in Google Maps for directions</a></p>
+
+    <div id="update">
+      <h2>Update the township</h2>
+      <textarea id="note" rows="3" placeholder="Note (optional), e.g. crew on site, cover replaced"></textarea>
+      <div class="row">
+        <button id="started">Work started</button>
+        <button id="fixed">Mark as fixed</button>
+      </div>
+    </div>
+    <p id="done" hidden>This case is closed. Thank you for fixing it. LENSA walkers nearby are told it has been repaired.</p>
+
+    <h2>History</h2>
+    <ol id="timeline"></ol>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const COLORS = { sent:'#6b4fbb', in_progress:'#1f8a8a', fixed:'#2e7d32' }
+const LABEL = { sent:'waiting for agency', in_progress:'work started', fixed:'fixed' }
+const q = new URLSearchParams(location.search), id = q.get('case'), key = q.get('key') || ''
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]))
+const clock = t => new Date(t * 1000).toLocaleString([], { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })
+let map = null
+
+function fail(text) {
+  document.getElementById('err').hidden = false
+  document.getElementById('err').textContent = text
+  title.textContent = 'Case not available'
+}
+
+function render(h) {
+  title.textContent = `Case #${h.id}: ${h.type}`
+  chip.textContent = h.overdue ? 'overdue' : LABEL[h.status] || h.status
+  chip.style.background = h.overdue ? 'var(--red)' : COLORS[h.status] || '#777'
+  facts.innerHTML = `
+    <dt>Assigned to</dt><dd>${esc(h.agency_name)}</dd>
+    <dt>Danger</dt><dd>${h.danger}/10${h.urgent ? ' · URGENT' : ''}</dd>
+    <dt>Reports</dt><dd>${h.reports} LENSA walker report(s)</dd>
+    <dt>First seen</dt><dd>${clock(h.created)}</dd>
+    <dt>Fix by</dt><dd class="${h.overdue ? 'late' : ''}">${h.due_at ? clock(h.due_at) : '-'}${h.overdue ? ' (overdue)' : ''}</dd>
+    <dt>Location</dt><dd>${h.lat.toFixed(6)}, ${h.lon.toFixed(6)}</dd>`
+  gmaps.href = `https://maps.google.com/?q=${h.lat},${h.lon}`
+  started.hidden = h.status !== 'sent'
+  document.getElementById('update').hidden = !['sent', 'in_progress'].includes(h.status)
+  done.hidden = h.status !== 'fixed'
+  timeline.innerHTML = h.events.map(e => `<li>${clock(e.t)} · ${esc(e.text)}</li>`).join('')
+  document.getElementById('case').hidden = false
+  if (!map) {
+    map = L.map('map').setView([h.lat, h.lon], 18)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 19, maxNativeZoom: 17, attribution: 'Tiles &copy; Esri' }).addTo(map)
+    L.circleMarker([h.lat, h.lon], { radius: 12, color: '#fff', weight: 3, fillColor: '#b3261e', fillOpacity: 1 }).addTo(map)
+  }
+}
+
+async function load() {
+  try {
+    const r = await fetch(`/api/agency/${encodeURIComponent(id)}?key=${encodeURIComponent(key)}`)
+    const h = await r.json()
+    if (!r.ok) return fail(r.status === 403 ? 'This link is not valid for this case. Use the link from the email.' : h.error)
+    render(h)
+  } catch { fail('Could not reach the township server.') }
+}
+
+async function update(status) {
+  try {
+    const r = await fetch(`/api/agency/${encodeURIComponent(id)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, status, note: note.value }) })
+    const h = await r.json()
+    if (!r.ok) return alert(h.error)
+    note.value = ''
+    render(h)
+  } catch { alert('Could not reach the township server.') }
+}
+started.onclick = () => update('in_progress')
+fixed.onclick = () => { if (confirm('Mark this hazard as fixed?')) update('fixed') }
+
+load()
+</script>
+</body>
+</html>

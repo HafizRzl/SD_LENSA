@@ -1,0 +1,10 @@
+# LENSA desktop beta — deps. torch/torchvision come in via ultralytics.
+ultralytics>=8.4
+opencv-python
+pyyaml
+lap>=0.5.12        # ByteTrack object IDs (model.track)
+soundfile          # voice clip trim + join
+numpy
+google-genai       # Loop B (describe scene / read sign) — online, Gemini
+# Optional: only needed for --speak (text-to-speech)
+pyttsx3

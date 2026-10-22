@@ -1,0 +1,2672 @@
+{
+ "scenes": [
+  {
+   "name": "empty",
+   "lang": "ms",
+   "frames": [
+    []
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "empty",
+   "lang": "en",
+   "frames": [
+    []
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "car stop",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 0.9,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "stop",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Berhenti! kereta di hadapan",
+     "segments": [
+      "Berhenti!",
+      "kereta di hadapan"
+     ],
+     "key": [
+      "stop",
+      "car",
+      "center",
+      null,
+      "stop"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "car stop",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 0.9,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "stop",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Stop! car ahead",
+     "segments": null,
+     "key": [
+      "stop",
+      "car",
+      "center",
+      null,
+      "stop"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 2m centre",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di hadapan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 2m centre",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person ahead, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 2m left",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di kiri, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di kiri",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "left",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 2m left",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person left, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "left",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 5m left",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 5.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "orang di kiri, 5 meter",
+     "segments": [
+      "orang di kiri",
+      "5 meter"
+     ],
+     "key": [
+      "caution",
+      "person",
+      "left",
+      null,
+      "notice"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "person 5m left",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 5.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "person left, 5 metres",
+     "segments": null,
+     "key": [
+      "caution",
+      "person",
+      "left",
+      null,
+      "notice"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "low confidence",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.2,
+      "dist": 0.9,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "low confidence",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.2,
+      "dist": 0.9,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "not in catalog",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "not_a_class",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "not in catalog",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "not_a_class",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "A chair C + chair L",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.5,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "kerusi di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "kerusi di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "chair",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "A chair C + chair L",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.5,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "chair ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "chair",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "C leans left",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.4,
+      "w": 0.2,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "C leans left",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.4,
+      "w": 0.2,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "C leans right",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.6,
+      "w": 0.2,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di hadapan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "C leans right",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.6,
+      "w": 0.2,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person ahead, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "D all blocked",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.25,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.83,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "blocked",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Berhenti! Laluan tersekat",
+     "segments": [
+      "Berhenti!",
+      "Laluan tersekat"
+     ],
+     "key": [
+      "blocked",
+      "person",
+      "center",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "D all blocked",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.25,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.83,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "blocked",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Stop! Path blocked",
+     "segments": null,
+     "key": [
+      "blocked",
+      "person",
+      "center",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "map gap",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.45,
+      "w": 0.08,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.12,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.88,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 3 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "3 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "map gap",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.45,
+      "w": 0.08,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.12,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.8,
+      "cx": 0.88,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 3 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "far bottle",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.68,
+      "w": 0.64,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "bottle",
+      "conf": 0.9,
+      "dist": 5.4,
+      "cx": 0.14,
+      "w": 0.12,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.68,
+      "w": 0.64,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di kanan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di kanan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "right",
+      "left",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di kanan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di kanan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "right",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "far bottle",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.68,
+      "w": 0.64,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "bottle",
+      "conf": 0.9,
+      "dist": 5.4,
+      "cx": 0.14,
+      "w": 0.12,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.68,
+      "w": 0.64,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person right, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "right",
+      "left",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person right, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "right",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "pothole ahead",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "pothole",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "low",
+     "avoid": "left",
+     "line": "lubang jalan di hadapan, elak ke kiri",
+     "segments": [
+      "lubang jalan di hadapan",
+      "elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "pothole",
+      "center",
+      "left",
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "pothole ahead",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "pothole",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "low",
+     "avoid": "left",
+     "line": "pothole ahead, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "pothole",
+      "center",
+      "left",
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "pothole left",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "pothole",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Hati-hati, lubang jalan di kiri",
+     "segments": [
+      "Hati-hati",
+      "lubang jalan di kiri"
+     ],
+     "key": [
+      "caution",
+      "pothole",
+      "left",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "pothole left",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "pothole",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Careful, pothole left",
+     "segments": null,
+     "key": [
+      "caution",
+      "pothole",
+      "left",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "open manhole right",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "manhole_open",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Awas! lurang terbuka di kanan",
+     "segments": [
+      "Awas!",
+      "lurang terbuka di kanan"
+     ],
+     "key": [
+      "caution",
+      "manhole_open",
+      "right",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "open manhole right",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "manhole_open",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Watch out! open manhole right",
+     "segments": null,
+     "key": [
+      "caution",
+      "manhole_open",
+      "right",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "open manhole ahead",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "manhole_open",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "high",
+     "avoid": "left",
+     "line": "Awas! lurang terbuka di hadapan, elak ke kiri",
+     "segments": [
+      "Awas!",
+      "lurang terbuka di hadapan",
+      "elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "manhole_open",
+      "center",
+      "left",
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "open manhole ahead",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "manhole_open",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_left",
+     "urgency": "high",
+     "avoid": "left",
+     "line": "Watch out! open manhole ahead, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "manhole_open",
+      "center",
+      "left",
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "broken cover right",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "manhole_broken",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Hati-hati, penutup lurang pecah di kanan",
+     "segments": [
+      "Hati-hati",
+      "penutup lurang pecah di kanan"
+     ],
+     "key": [
+      "caution",
+      "manhole_broken",
+      "right",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "broken cover right",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "manhole_broken",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Careful, broken manhole cover right",
+     "segments": null,
+     "key": [
+      "caution",
+      "manhole_broken",
+      "right",
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "intact cover",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "manhole_intact",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "intact cover",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "manhole_intact",
+      "conf": 0.9,
+      "dist": null,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "held metres",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.6,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": 2
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di kiri, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di kiri",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "left",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "held metres",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.6,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": 2
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person left, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "left",
+      "right",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "far car 7m",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 7.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "far car 7m",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 7.0,
+      "cx": 0.5,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "car 2.5m + person 2m",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 2.5,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "medium",
+     "avoid": null,
+     "line": "kereta di kanan, 2 meter",
+     "segments": [
+      "kereta di kanan",
+      "2 meter"
+     ],
+     "key": [
+      "caution",
+      "car",
+      "right",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "car 2.5m + person 2m",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "car",
+      "conf": 0.9,
+      "dist": 2.5,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "caution",
+     "urgency": "medium",
+     "avoid": null,
+     "line": "car right, 2 metres",
+     "segments": null,
+     "key": [
+      "caution",
+      "car",
+      "right",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hysteresis flicker",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.45,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di hadapan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hysteresis flicker",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.45,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person ahead, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "held side blocked",
+   "lang": "ms",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.45,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "orang di hadapan, 2 meter, elak ke kanan",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kanan"
+     ],
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "orang di hadapan, 2 meter, elak ke kiri",
+     "segments": [
+      "orang di hadapan",
+      "2 meter, elak ke kiri"
+     ],
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "held side blocked",
+   "lang": "en",
+   "frames": [
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.45,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     }
+    ],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.55,
+      "w": 0.1,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.85,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "steer_right",
+     "urgency": "medium",
+     "avoid": "right",
+     "line": "person ahead, 2 metres, move right",
+     "segments": null,
+     "key": [
+      "steer_right",
+      "person",
+      "center",
+      "right",
+      "caution"
+     ]
+    },
+    {
+     "action": "steer_left",
+     "urgency": "medium",
+     "avoid": "left",
+     "line": "person ahead, 2 metres, move left",
+     "segments": null,
+     "key": [
+      "steer_left",
+      "person",
+      "center",
+      "left",
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "stale empty map",
+   "lang": "ms",
+   "frames": [
+    [],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.25,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.83,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Laluan hadapan kosong",
+     "segments": [
+      "Laluan hadapan kosong"
+     ],
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "action": "blocked",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Berhenti! Laluan tersekat",
+     "segments": [
+      "Berhenti!",
+      "Laluan tersekat"
+     ],
+     "key": [
+      "blocked",
+      "person",
+      "center",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "stale empty map",
+   "lang": "en",
+   "frames": [
+    [],
+    [
+     {
+      "cls": "person",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.5,
+      "w": 0.25,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.17,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     },
+     {
+      "cls": "chair",
+      "conf": 0.9,
+      "dist": 2.0,
+      "cx": 0.83,
+      "w": 0.15,
+      "tid": null,
+      "spoken": null
+     }
+    ]
+   ],
+   "expect": [
+    {
+     "action": "proceed",
+     "urgency": "low",
+     "avoid": null,
+     "line": "Path ahead is clear",
+     "segments": null,
+     "key": [
+      "proceed",
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "action": "blocked",
+     "urgency": "high",
+     "avoid": null,
+     "line": "Stop! Path blocked",
+     "segments": null,
+     "key": [
+      "blocked",
+      "person",
+      "center",
+      null,
+      "caution"
+     ]
+    }
+   ]
+  }
+ ],
+ "maps": [
+  {
+   "name": "two ghosts",
+   "hits": [
+    [
+     0.3,
+     2.0,
+     0.8
+    ],
+    [
+     -0.8,
+     5.0,
+     0.8
+    ]
+   ],
+   "path": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     7,
+     5
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     15,
+     6
+    ]
+   ],
+   "turn": "left"
+  },
+  {
+   "name": "person 2m",
+   "hits": [
+    [
+     0.0,
+     2.0,
+     0.5
+    ]
+   ],
+   "path": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     13,
+     4
+    ],
+    [
+     14,
+     4
+    ],
+    [
+     15,
+     4
+    ],
+    [
+     15,
+     5
+    ],
+    [
+     15,
+     6
+    ]
+   ],
+   "turn": "left"
+  },
+  {
+   "name": "chair right",
+   "hits": [
+    [
+     0.6,
+     1.5,
+     0.5
+    ]
+   ],
+   "path": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     15,
+     6
+    ]
+   ],
+   "turn": null
+  },
+  {
+   "name": "wall",
+   "hits": [
+    [
+     -3.0,
+     1.0,
+     1.0
+    ],
+    [
+     -2.5,
+     1.0,
+     1.0
+    ],
+    [
+     -2.0,
+     1.0,
+     1.0
+    ],
+    [
+     -1.5,
+     1.0,
+     1.0
+    ],
+    [
+     -1.0,
+     1.0,
+     1.0
+    ],
+    [
+     -0.5,
+     1.0,
+     1.0
+    ],
+    [
+     0.0,
+     1.0,
+     1.0
+    ],
+    [
+     0.5,
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0,
+     1.0
+    ],
+    [
+     1.5,
+     1.0,
+     1.0
+    ],
+    [
+     2.0,
+     1.0,
+     1.0
+    ],
+    [
+     2.5,
+     1.0,
+     1.0
+    ],
+    [
+     3.0,
+     1.0,
+     1.0
+    ]
+   ],
+   "path": [
+    [
+     0,
+     6
+    ]
+   ],
+   "turn": null
+  },
+  {
+   "name": "empty",
+   "hits": [],
+   "path": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     15,
+     6
+    ]
+   ],
+   "turn": null
+  }
+ ],
+ "loopb": {
+  "prompts": {
+   "describe_ms": "# Loop B — Describe the scene (online, Gemini vision)\n\nSent to Gemini together with ONE camera frame when the user asks \"what's around me?\".\n`Bahasa Melayu` is filled with the user's language (Bahasa Melayu or English). Edit freely; the beta\nre-reads this file on every request.\n\n## Role\nYou are LENSA, a navigation assistant for a blind pedestrian in Malaysia. The image is what a\nhead-mounted camera sees right now, facing the way the user is walking.\n\n## What to say\n- Describe the scene in **2–3 short sentences**, in Bahasa Melayu, as you would to a blind friend\n  standing next to you.\n- **Hazards first**: anything in the walking path (holes, drains, steps, kerbs, poles, vehicles,\n  wet floor, construction), then where to walk, then useful landmarks (shops, bus stop, doors, signs).\n- Give positions as kiri / kanan / hadapan (left / right / ahead) and rough distances in metres\n  or steps. No colours or decoration unless they help (e.g. \"lampu isyarat merah\").\n- **Never invent.** If the image is dark, blurry or blocked, say so plainly in one sentence.\n- Never tell the user it is safe to cross a road — say what you see and let them decide.\n\n## OUTPUT FORMAT\nPlain text only — the sentences to speak. No lists, no markdown, no preamble.\n",
+   "describe_en": "# Loop B — Describe the scene (online, Gemini vision)\n\nSent to Gemini together with ONE camera frame when the user asks \"what's around me?\".\n`English` is filled with the user's language (Bahasa Melayu or English). Edit freely; the beta\nre-reads this file on every request.\n\n## Role\nYou are LENSA, a navigation assistant for a blind pedestrian in Malaysia. The image is what a\nhead-mounted camera sees right now, facing the way the user is walking.\n\n## What to say\n- Describe the scene in **2–3 short sentences**, in English, as you would to a blind friend\n  standing next to you.\n- **Hazards first**: anything in the walking path (holes, drains, steps, kerbs, poles, vehicles,\n  wet floor, construction), then where to walk, then useful landmarks (shops, bus stop, doors, signs).\n- Give positions as kiri / kanan / hadapan (left / right / ahead) and rough distances in metres\n  or steps. No colours or decoration unless they help (e.g. \"lampu isyarat merah\").\n- **Never invent.** If the image is dark, blurry or blocked, say so plainly in one sentence.\n- Never tell the user it is safe to cross a road — say what you see and let them decide.\n\n## OUTPUT FORMAT\nPlain text only — the sentences to speak. No lists, no markdown, no preamble.\n",
+   "read_ms": "# Loop B — Read a sign (online OCR, Gemini vision)\n\nSent to Gemini together with ONE camera frame when the user asks to read text. Placeholders are\nfilled from `rules/ocr_reading_rules.yaml` and the user's language. Edit freely; the beta re-reads\nthis file on every request.\n\n## Role\nYou read short text that a blind pedestrian in Malaysia is facing: signboards, warnings, room\nnumbers, bus-stop and shop names.\n\n## What to read\n- Read the text that matters most to someone walking, in this priority: warning, room_number, signboard.\n- Skip advertising and dense unrelated text.\n- Keep the text in its original language.\n- At most 80 characters. Read it exactly as written; do not explain it.\n- If several signs are visible, read the most important one, then the next, separated by \". \".\n\n## OUTPUT FORMAT\nPlain text only — just the text to speak. If there is no readable text, output exactly: NONE\n",
+   "read_en": "# Loop B — Read a sign (online OCR, Gemini vision)\n\nSent to Gemini together with ONE camera frame when the user asks to read text. Placeholders are\nfilled from `rules/ocr_reading_rules.yaml` and the user's language. Edit freely; the beta re-reads\nthis file on every request.\n\n## Role\nYou read short text that a blind pedestrian in Malaysia is facing: signboards, warnings, room\nnumbers, bus-stop and shop names.\n\n## What to read\n- Read the text that matters most to someone walking, in this priority: warning, room_number, signboard.\n- Skip advertising and dense unrelated text.\n- Keep the text in its original language.\n- At most 80 characters. Read it exactly as written; do not explain it.\n- If several signs are visible, read the most important one, then the next, separated by \". \".\n\n## OUTPUT FORMAT\nPlain text only — just the text to speak. If there is no readable text, output exactly: NONE\n"
+  },
+  "signs": [
+   {
+    "raw": "NONE",
+    "lang": "ms",
+    "line": "Tiada tulisan dijumpai"
+   },
+   {
+    "raw": "NONE",
+    "lang": "en",
+    "line": "No text found"
+   },
+   {
+    "raw": " none. ",
+    "lang": "ms",
+    "line": "Tiada tulisan dijumpai"
+   },
+   {
+    "raw": " none. ",
+    "lang": "en",
+    "line": "No text found"
+   },
+   {
+    "raw": "",
+    "lang": "ms",
+    "line": "Tiada tulisan dijumpai"
+   },
+   {
+    "raw": "",
+    "lang": "en",
+    "line": "No text found"
+   },
+   {
+    "raw": "  DILARANG   MASUK ",
+    "lang": "ms",
+    "line": "Papan tanda: DILARANG MASUK"
+   },
+   {
+    "raw": "  DILARANG   MASUK ",
+    "lang": "en",
+    "line": "Sign: DILARANG MASUK"
+   },
+   {
+    "raw": "Bilik 3.14\nMakmal Komputer",
+    "lang": "ms",
+    "line": "Papan tanda: Bilik 3.14 Makmal Komputer"
+   },
+   {
+    "raw": "Bilik 3.14\nMakmal Komputer",
+    "lang": "en",
+    "line": "Sign: Bilik 3.14 Makmal Komputer"
+   },
+   {
+    "raw": "AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS ",
+    "lang": "ms",
+    "line": "Papan tanda: AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS"
+   },
+   {
+    "raw": "AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS ",
+    "lang": "en",
+    "line": "Sign: AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS AWAS"
+   },
+   {
+    "raw": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "lang": "ms",
+    "line": "Papan tanda: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   },
+   {
+    "raw": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "lang": "en",
+    "line": "Sign: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+   }
+  ]
+ }
+}

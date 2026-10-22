@@ -1,0 +1,25 @@
+# Audio Output Style — pace, interruption, and repeat frequency.
+# The desktop beta hot-reloads this file (~2 s) — edit and hear the change live.
+
+# Speaking pace (passed to TTS). 1.0 = normal. (Needs restart — the engine reads it at start.)
+speaking_rate: 1.0
+
+# Urgency handling
+interrupt_on_high_urgency: true   # a new critical hazard cuts off current speech
+repeat_high_urgency_every_s: 2    # keep repeating STOP warnings this often
+repeat_normal_every_s: 4
+blocked_max_repeats: 3            # "Berhenti! Laluan tersekat" at most this many times per
+                                  # blockage (same tracked objects); a new object = new blockage
+
+# Silence policy
+speak_when_scene_unchanged: false # true = re-announce the same line every min_gap; false = stay quiet
+min_gap_between_lines_s: 2.0   # silence after a sentence FINISHES before the next one
+
+# Voice: 'husein' | 'idayu' = Malay cached clips (render with desktop-beta/render_clips.py);
+# 'os' = the operating system voice (fast, English-accented). Needs restart.
+voice: husein
+
+# Voice for FREE text (scene descriptions, signs) — the cached clips can't say arbitrary text.
+# auto = the first installed Malay OS voice if there is one, else the system default.
+# Or part of a voice name, e.g. "Zira" or the Malay voice's name once installed. Needs restart.
+dynamic_voice: auto

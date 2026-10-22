@@ -1,0 +1,47 @@
+# Phrase Library — Bahasa Melayu.
+# Placeholders in {curly_braces} are filled by the app — keep the placeholder names exactly.
+# Reword the surrounding text freely to tune the voice. Hot-reloaded by the desktop beta.
+
+directions:
+  left: kiri
+  right: kanan
+  ahead: hadapan
+
+templates:
+  # A normal obstacle notice
+  detection: "{objek} di {arah}, {jarak} meter"
+  # Something close — be careful
+  caution: "Hati-hati, {objek} di {arah}"
+  # Very dangerous ground hazard, distance unknown — "Awas!" is prefixed automatically
+  alert: "{objek} di {arah}"
+  # Urgent — stop now
+  stop: "Berhenti! {objek} di hadapan"
+  # Every direction blocked (no gap in view) — keep in sync with decision_segments()
+  blocked: "Berhenti! Laluan tersekat"
+  # Path is clear
+  clear: "Laluan hadapan kosong"
+  # Tell the user to move aside (no hazard named)
+  steer: "Elak ke {arah}"
+  # Steer AWAY from a named hazard: {arah} = hazard's side, {elak} = direction to move
+  steer_hazard: "{objek} di {arah}, {jarak} meter, elak ke {elak}"
+  steer_hazard_nodist: "{objek} di {arah}, elak ke {elak}"
+  # Reading a sign (from OCR)
+  ocr: "Papan tanda: {teks}"
+  # Loop B (online: describe scene / read text)
+  loopb_wait: "Sebentar"
+  ocr_none: "Tiada tulisan dijumpai"
+  loopb_offline: "Tiada internet. Fungsi ini perlukan internet"
+  loopb_error: "Maaf, Gemini tidak dapat menjawab sekarang"
+  loopb_no_key: "Kunci API belum ditetapkan"
+
+# Short urgency word placed in front of urgent lines
+urgency_prefix:
+  high: "Awas!"
+  medium: ""
+  low: ""
+
+# How the voice should SAY a word — affects the rendered audio only, never the on-screen
+# text or the clip cache key. Digits are always spoken as Malay words ("2" -> "dua").
+# After editing, re-render: python desktop-beta/render_clips.py --prewarm --force
+pronounce:
+  meter: "meter"

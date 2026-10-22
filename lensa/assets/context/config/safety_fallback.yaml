@@ -1,0 +1,28 @@
+# Safety Fallbacks (safety-critical — edit with care).
+# What LENSA says when something goes wrong. When in doubt these tell the user to stop.
+# Keep both languages filled; do not leave any field blank.
+
+# Lost connection to the head unit
+connection_lost:
+  ms: "Sambungan terputus. Sila berhenti dan tunggu."
+  en: "Connection lost. Please stop and wait."
+
+# A model failed to load or crashed
+model_failure:
+  ms: "Sistem tidak berfungsi. Sila berhenti."
+  en: "System not working. Please stop."
+
+# Scene is too unclear to trust (low confidence everywhere)
+low_confidence_scene:
+  ms: "Laluan tidak jelas. Hati-hati."
+  en: "Path unclear. Be careful."
+
+# Sensor (camera or ToF) not responding
+sensor_failure:
+  ms: "Sensor tiada isyarat. Sila berhenti."
+  en: "No sensor signal. Please stop."
+
+# Low battery on the head unit
+low_battery:
+  ms: "Bateri lemah. Sila cas alat."
+  en: "Battery low. Please charge the device."

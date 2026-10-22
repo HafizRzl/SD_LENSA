@@ -1,0 +1,30 @@
+# Phrase Library — English (mirror of phrase_library_ms.yaml).
+# Keep in sync so switching languages behaves identically. Placeholder names must not change.
+
+directions:
+  left: left
+  right: right
+  ahead: ahead
+
+templates:
+  detection: "{object} {direction}, {distance} metres"
+  caution: "Careful, {object} {direction}"
+  alert: "{object} {direction}"
+  stop: "Stop! {object} ahead"
+  blocked: "Stop! Path blocked"
+  clear: "Path ahead is clear"
+  steer: "Move {direction}"
+  # Steer AWAY from a named hazard: {direction} = hazard's side, {avoid} = direction to move
+  steer_hazard: "{object} {direction}, {distance} metres, move {avoid}"
+  steer_hazard_nodist: "{object} {direction}, move {avoid}"
+  ocr: "Sign: {text}"
+  loopb_wait: "One moment"
+  ocr_none: "No text found"
+  loopb_offline: "No internet. This feature needs internet"
+  loopb_error: "Sorry, Gemini couldn't answer right now"
+  loopb_no_key: "API key not set"
+
+urgency_prefix:
+  high: "Watch out!"
+  medium: ""
+  low: ""

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LENSA Walk</title>
+<!-- opened as a file it can't reach the server: jump to the real address -->
+<script>if (location.protocol === 'file:') location.replace('http://localhost:8000/' + location.search)</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root { --teal:#1f8a8a; --dark:#123c40; --orange:#e08a00; --cream:#f4f0e6; --ink:#1d2b2c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui, sans-serif; background:var(--cream); color:var(--ink);
+         display:flex; flex-direction:column; height:100dvh; }
+  header { background:var(--dark); color:#fff; padding:12px 16px; }
+  header b { letter-spacing:.08em; font-size:13px; color:#8fd3d3; }
+  header h1 { margin:2px 0 0; font-size:20px; }
+  #status { font-size:14px; padding:8px 16px; background:#e8e2d4; min-height:2.4em; }
+  #warn { display:none; background:#b3261e; color:#fff; padding:10px 16px; font-size:14px; }
+  #map { flex:1; }
+  .bar { padding:10px 16px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; background:#fff; }
+  button, select { font:inherit; font-size:16px; padding:10px 14px; border-radius:10px; border:1px solid #c9c2b2; background:#fff; }
+  #start { background:var(--teal); color:#fff; border:none; width:100%; font-size:20px; padding:16px; }
+  details { width:100%; font-size:14px; }
+  label { font-size:14px; }
+  #answer { display:none; position:fixed; left:0; right:0; bottom:0; z-index:2000; background:var(--dark); color:#fff;
+            padding:16px; gap:10px; align-items:center; flex-wrap:wrap; }
+  #answer span { width:100%; font-size:18px; }
+  #answer button { flex:1; font-size:22px; padding:18px; border:none; }
+  #yes { background:var(--teal); color:#fff; }
+</style>
+</head>
+<body>
+<header><b>LENSA · WALK</b><h1>Hazard map</h1></header>
+<div id="warn">This page is not on HTTPS/localhost, so the phone blocks GPS and the microphone. See README → "Phone setup".</div>
+<div id="status">Tap Start before walking.</div>
+<div id="map"></div>
+<div class="bar">
+  <button id="start">Start walk</button>
+  <details>
+    <summary>Test / demo backup</summary>
+    <p>
+      <select id="sim">
+        <option value="open drain|9">Open drain</option>
+        <option value="open manhole|10">Open manhole</option>
+        <option value="pothole|7">Pothole</option>
+        <option value="broken pavement|6">Broken pavement</option>
+        <option value="blocked walkway|8">Blocked walkway</option>
+      </select>
+      <button id="simBtn">Simulate LENSA passing it</button>
+    </p>
+    <label><input type="checkbox" id="tap"> Fake GPS: tap the map to set my position</label>
+    <p>Walking as user <b id="who"></b> (add <code>?user=B</code> to the address to be a second walker)</p>
+  </details>
+</div>
+
+<div id="answer">
+  <span>Log this hazard? Say yes/no, or tap (keys Y/N) · <b id="count">5</b> s</span>
+  <button id="yes">Yes, log it</button><button id="no">No</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const WARN_M = 30          // warn when a logged hazard is this close
+const ANSWER_MS = 5000     // silence for this long = cancelled
+const GOOD_NEWS_S = 7 * 86400   // tell walkers about a repair for a week after it is fixed
+const COLORS = { unconfirmed:'#e08a00', confirmed:'#b3261e', sent:'#6b4fbb', in_progress:'#1f8a8a', fixed:'#2e7d32', rejected:'#9e9e9e' }
+const LABEL = { unconfirmed:'1st report', confirmed:'confirmed', sent:'with agency', in_progress:'being repaired', fixed:'fixed', rejected:'rejected' }
+
+const load = k => { try { return localStorage.getItem(k) } catch { return null } }
+const save = (k, v) => { try { localStorage.setItem(k, v) } catch {} }
+const me = new URLSearchParams(location.search).get('user') || load('lensaUser') || (() => {
+  const id = 'walker-' + Math.random().toString(36).slice(2, 7)
+  save('lensaUser', id)
+  return id
+})()
+const thanked = new Set(JSON.parse(load('lensaThanked:' + me) || '[]'))   // fixed cases I was already thanked for
+document.getElementById('who').textContent = me
+if (!isSecureContext) document.getElementById('warn').style.display = 'block'
+
+const map = L.map('map').setView([4.3850, 100.9790], 17)   // default view: UTP
+// Esri street basemap, no key. (tile.openstreetmap.org answered 403 "Access blocked"; CARTO now wants a key.)
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 19, maxNativeZoom: 17, attribution: 'Tiles &copy; Esri' }).addTo(map)
+const pins = L.layerGroup().addTo(map)
+let pos = null, meMarker = null, hazards = [], after = 0, busy = false, started = false
+const warned = new Set()   // "<id>:open" / "<id>:fixed", so a repair is still announced after a warning
+
+const $status = document.getElementById('status')
+const status = t => { $status.textContent = t }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]))
+const api = async (url, body) => (await fetch(url, body && {
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json()
+
+function say(text) {
+  status('🔊 ' + text)
+  return new Promise(done => {
+    speechSynthesis.cancel()
+    const u = new SpeechSynthesisUtterance(text)
+    u.lang = 'en-US'
+    u.onend = u.onerror = done
+    setTimeout(done, 2000 + text.length * 90)   // some phones never fire onend; don't hang the app
+    speechSynthesis.speak(u)
+  })
+}
+
+// true = yes, false = no, null = 5 s of nothing. Voice, or the on-screen buttons / Y-N keys
+// as a fallback when the mic is blocked (laptop browser pane, no permission, noisy hall).
+function listenYesNo() {
+  return new Promise(resolve => {
+    const panel = document.getElementById('answer'), count = document.getElementById('count')
+    let done = false, rec = null, left = ANSWER_MS / 1000
+    const finish = v => {
+      if (done) return
+      done = true; clearTimeout(timer); clearInterval(tick)
+      panel.style.display = 'none'; document.onkeydown = null
+      try { rec?.abort() } catch {}
+      resolve(v)
+    }
+    const timer = setTimeout(() => finish(null), ANSWER_MS)
+    const tick = setInterval(() => { count.textContent = --left }, 1000)
+    count.textContent = left
+    panel.style.display = 'flex'
+    document.getElementById('yes').onclick = () => finish(true)
+    document.getElementById('no').onclick = () => finish(false)
+    document.onkeydown = e => { if (e.key === 'y') finish(true); if (e.key === 'n') finish(false) }
+    status('🎤 Listening… say yes or no')
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) return status('No speech recognition in this browser. Tap Yes or No.')
+    rec = new SR()
+    rec.lang = 'en-US'; rec.interimResults = true; rec.maxAlternatives = 3
+    rec.onresult = e => {
+      const heard = [...e.results].flatMap(r => [...r].map(a => a.transcript)).join(' ').toLowerCase()
+      status('🎤 heard: ' + heard)
+      if (/\b(yes|yeah|yep|yup|sure|okay|ok|log it)\b/.test(heard)) finish(true)
+      else if (/\b(no|nope|cancel|don't)\b/.test(heard)) finish(false)
+    }
+    rec.onerror = e => {
+      if (/not-allowed/.test(e.error)) { rec = null; status('🎤 Microphone blocked. Tap Yes or No.') }
+    }
+    rec.onend = () => { if (!done && rec) try { rec.start() } catch {} }   // phone stops after a pause; keep going until 5 s
+    try { rec.start() } catch {}
+  })
+}
+
+// LENSA told us a fixed hazard was just walked past
+async function onPassed(ev) {
+  if (busy) return
+  busy = true
+  try {
+    if (!pos) return await say(`Passed a ${ev.type}, but there is no GPS fix, so it cannot be logged.`)
+    const at = { ...pos }   // where we are now, right after passing it
+    await say(`Dangerous hazard found: ${ev.type}. Do you want to log it?`)
+    const yes = await listenYesNo()
+    if (yes !== true) return await say(yes === false ? 'Okay, not logged.' : 'No answer. Cancelled.')
+    const h = await api('/api/report', { type: ev.type, danger: ev.danger, lat: at.lat, lon: at.lon, by: me })
+    warned.add(h.id + ':open')   // don't warn me about the hazard I just logged
+    await refresh()
+    await say(h.status === 'unconfirmed'
+      ? 'Logged. It will be confirmed when another user passes.'
+      : 'Logged. Thank you, this hazard is now confirmed for everyone.')
+  } catch (e) {
+    await say('Could not reach the hazard server.')
+  } finally {
+    busy = false
+  }
+}
+
+// Waze-style heads-up for hazards other walkers logged, and the good news once they're repaired.
+// One message per call; the next GPS fix / refresh says the next one.
+function checkNearby() {
+  if (busy || !started) return
+  const banner = document.getElementById('warn')
+  for (const h of hazards) {   // you helped get this fixed: say thanks, wherever you are
+    if (!h.mine || h.status !== 'fixed' || thanked.has(h.id)) continue
+    thanked.add(h.id)
+    save('lensaThanked:' + me, JSON.stringify([...thanked]))
+    warned.add(h.id + ':fixed')
+    banner.style.display = 'block'; banner.style.background = '#2e7d32'
+    banner.textContent = `✓ The ${h.type} you reported has been repaired`
+    return say(`Thank you. The ${h.type} you reported has been repaired.`)
+  }
+  if (!pos) return
+  for (const h of hazards) {
+    const fixed = h.status === 'fixed'
+    const tag = h.id + (fixed ? ':fixed' : ':open')
+    if (h.status === 'rejected' || warned.has(tag)) continue
+    if (fixed && Date.now() / 1000 - h.fixed_at > GOOD_NEWS_S) continue
+    const d = map.distance([pos.lat, pos.lon], [h.lat, h.lon])
+    if (d > WARN_M) continue
+    warned.add(tag)
+    const m = Math.max(5, Math.round(d / 5) * 5)
+    banner.style.display = 'block'
+    if (fixed) {
+      banner.style.background = '#2e7d32'
+      banner.textContent = `✓ ${h.type} ~${m} m has been repaired`
+      return say(`Good news. The ${h.type} about ${m} metres from you has been repaired.`)
+    }
+    banner.style.background = '#b3261e'
+    banner.textContent = `⚠ ${h.type} ~${m} m (${LABEL[h.status]})`
+    return say(`Caution. ${h.status === 'unconfirmed' ? 'Possible' : 'Reported'} ${h.type}, about ${m} metres from you.`)
+  }
+}
+
+function setPos(lat, lon, acc) {
+  pos = { lat, lon }
+  if (!meMarker) meMarker = L.circleMarker([lat, lon], { radius: 9, color: '#fff', weight: 3, fillColor: '#1a73e8', fillOpacity: 1 }).addTo(map)
+  meMarker.setLatLng([lat, lon])
+  if (!busy) status(`📍 GPS ±${Math.round(acc)} m · ${hazards.filter(h => !['fixed', 'rejected'].includes(h.status)).length} open hazards on map`)
+  checkNearby()
+}
+
+async function refresh() {
+  try { hazards = await api('/api/hazards?me=' + encodeURIComponent(me)) } catch { return }
+  pins.clearLayers()
+  for (const h of hazards) {
+    if (h.status === 'rejected') continue
+    L.circleMarker([h.lat, h.lon], { radius: 10, color: '#fff', weight: 2, fillColor: COLORS[h.status], fillOpacity: .95 })
+      .bindPopup(`<b>${esc(h.type)}</b><br>${LABEL[h.status]} · ${h.reports} report(s)`).addTo(pins)
+  }
+  checkNearby()
+}
+
+async function poll() {
+  try {
+    const r = await api('/api/detected?after=' + after)
+    after = r.next
+    r.events.forEach(onPassed)
+  } catch {}
+}
+
+document.getElementById('start').onclick = async () => {
+  started = true
+  document.getElementById('start').style.display = 'none'
+  await say('LENSA hazard map ready.')   // also unlocks speech on phones (needs a tap first)
+  after = (await api('/api/detected?after=0')).next   // ignore anything from before Start
+  setInterval(poll, 1000)
+  if (navigator.geolocation) navigator.geolocation.watchPosition(
+    p => { if (!document.getElementById('tap').checked) setPos(p.coords.latitude, p.coords.longitude, p.coords.accuracy) },
+    e => status('GPS: ' + e.message + ' (use Fake GPS below to test)'),
+    { enableHighAccuracy: true, maximumAge: 2000 })
+}
+map.on('click', e => { if (document.getElementById('tap').checked) setPos(e.latlng.lat, e.latlng.lng, 0) })
+document.getElementById('simBtn').onclick = () => {
+  const [type, danger] = document.getElementById('sim').value.split('|')
+  api('/api/detected', { type, danger: +danger })
+}
+
+refresh()
+setInterval(refresh, 5000)
+</script>
+</body>
+</html>

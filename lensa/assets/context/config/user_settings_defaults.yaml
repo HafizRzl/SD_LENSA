@@ -1,0 +1,10 @@
+# User Settings — defaults the app ships with. Users can override these in-app.
+
+language: ms                   # ms (Bahasa Melayu) | en (English)
+verbosity: normal              # minimal | normal | detailed
+speaking_rate: 1.0
+hazard_sensitivity: medium     # low | medium | high
+announce_distance_threshold_m: 6.0
+repeat_interval_s: 4
+ocr_on_demand: true            # only read text when the user asks
+units: metric                  # metric (metres) | imperial (feet)

@@ -1,0 +1,149 @@
+# Object Catalog — the objects LENSA can announce.
+# BM/EN labels + danger_weight (0 = harmless, 10 = deadly). Add/edit rows freely;
+# yolo_class must match what the detector outputs (see desktop-beta/detectable_classes.md
+# for which classes are live with stock YOLO26n).
+# ground: true = lies flat on the ground (pothole, drain...). Box height can't give its
+# distance, so the beta announces it without metres ("Hati-hati, lubang jalan di kiri").
+
+objects:
+  - yolo_class: person
+    en: person
+    ms: orang
+    danger_weight: 4
+  - yolo_class: car
+    en: car
+    ms: kereta
+    danger_weight: 9
+  - yolo_class: motorcycle
+    en: motorcycle
+    ms: motosikal
+    danger_weight: 9
+  - yolo_class: bicycle
+    en: bicycle
+    ms: basikal
+    danger_weight: 6
+  - yolo_class: bus
+    en: bus
+    ms: bas
+    danger_weight: 9
+  - yolo_class: truck
+    en: truck
+    ms: lori
+    danger_weight: 9
+  - yolo_class: door
+    en: door
+    ms: pintu
+    danger_weight: 2
+  - yolo_class: stairs
+    en: stairs
+    ms: tangga
+    danger_weight: 8
+  - yolo_class: pole
+    en: pole
+    ms: tiang
+    danger_weight: 5
+  - yolo_class: wall
+    en: wall
+    ms: dinding
+    danger_weight: 5
+  - yolo_class: tree
+    en: tree
+    ms: pokok
+    danger_weight: 5
+  - yolo_class: bench
+    en: bench
+    ms: bangku
+    danger_weight: 3
+  - yolo_class: drain
+    ground: true
+    en: drain
+    ms: longkang
+    danger_weight: 8
+  - yolo_class: curb
+    ground: true
+    en: curb
+    ms: tepi jalan
+    danger_weight: 6
+  - yolo_class: pothole
+    ground: true
+    en: pothole
+    ms: lubang jalan
+    danger_weight: 7
+  - yolo_class: broken_road        # road-hazard model (train_hazards.py)
+    ground: true
+    en: broken road
+    ms: jalan rosak
+    danger_weight: 6
+  # manhole covers (road-hazard model v2, "manhole clean" dataset)
+  - yolo_class: manhole_open       # cover missing — an open shaft
+    ground: true
+    en: open manhole
+    ms: lurang terbuka
+    danger_weight: 10
+  - yolo_class: manhole_displaced  # cover lifted, ajar or shifted off its seat
+    ground: true
+    en: displaced manhole cover
+    ms: penutup lurang teralih
+    danger_weight: 9
+  - yolo_class: manhole_broken     # cover cracked or holed through
+    ground: true
+    en: broken manhole cover
+    ms: penutup lurang pecah
+    danger_weight: 8
+  - yolo_class: manhole_intact     # normal, flush cover — detected but never announced
+    ground: true
+    en: manhole cover
+    ms: penutup lurang
+    danger_weight: 0
+  - yolo_class: traffic_light
+    en: traffic light
+    ms: lampu isyarat
+    danger_weight: 2
+  - yolo_class: crossing
+    ground: true
+    en: pedestrian crossing
+    ms: lintasan pejalan kaki
+    danger_weight: 1
+  - yolo_class: animal
+    en: animal
+    ms: haiwan
+    danger_weight: 5
+  - yolo_class: signboard
+    en: signboard
+    ms: papan tanda
+    danger_weight: 1
+  - yolo_class: barrier
+    en: barrier
+    ms: penghadang
+    danger_weight: 6
+  # tabletop test objects (COCO classes — detectable with stock YOLO26n)
+  - yolo_class: bottle
+    en: bottle
+    ms: botol
+    danger_weight: 2
+  # Path obstacles — COCO, detectable with stock YOLO26n
+  - yolo_class: chair
+    en: chair
+    ms: kerusi
+    danger_weight: 4
+  - yolo_class: potted_plant
+    en: potted plant
+    ms: pasu bunga
+    danger_weight: 3
+  - yolo_class: suitcase
+    en: suitcase
+    ms: beg pakaian
+    danger_weight: 4
+  - yolo_class: fire_hydrant
+    en: fire hydrant
+    ms: pili bomba
+    danger_weight: 5
+  - yolo_class: stop_sign
+    en: stop sign
+    ms: papan tanda berhenti
+    danger_weight: 2
+  - yolo_class: train
+    en: train
+    ms: kereta api
+    danger_weight: 10
+
