@@ -34,17 +34,19 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.math.atan
 
-/** LENSA v0.5 — live view + mini-map on top; PLAY | STOP and TERANGKAN | BACA below.
+/** LENSA v0.5 — PETA on top, live view + mini-map; MAIN (play) | HENTI (stop) and TERANG | BACA below.
  *  Loop A (hazards) is the desktop beta's brain, ported 1:1 and offline.
  *  Loop B (describe / read a sign) is online: one photo to Gemini, on demand, even when stopped.
  *  Hazard map (hackathon): after passing a fixed hazard, ask to log it with GPS to the township
- *  server; warn about hazards other walkers logged. Set the server with the PETA BAHAYA button. */
+ *  server; warn about hazards other walkers logged. Set the server with the PETA button. */
 class MainActivity : AppCompatActivity() {
     private val lang = "ms"
     private lateinit var content: Content
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private var askedMapPerms = false
     private var detectors: List<Triple<Detector, IouTracker, Double>>? = null
     private var provider: ProcessCameraProvider? = null
-    private var capture: ImageCapture? = null          // bound while PLAY runs (null if the phone can't)
+    private var capture: ImageCapture? = null          // bound while MAIN runs (null if the phone can't)
     @Volatile private var lastFrame: Bitmap? = null    // fallback photo: the latest analysis frame
     private val worker = Executors.newSingleThreadExecutor()
     private val photoExec = Executors.newSingleThreadExecutor()
@@ -106,27 +108,35 @@ class MainActivity : AppCompatActivity() {
         showMapServer()
         setContentView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            // Android 15+ draws apps edge to edge: keep every control clear of the status bar
+            // and the gesture / navigation bar (the bottom row used to sit under it)
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+                val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+                v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+                insets
+            }
+            addView(mapButton, LinearLayout.LayoutParams(-1, -2))
             addView(FrameLayout(this@MainActivity).apply {
                 addView(preview, FrameLayout.LayoutParams(-1, -1))
                 addView(this@MainActivity.overlay, FrameLayout.LayoutParams(-1, -1))   // not View.overlay
             }, LinearLayout.LayoutParams(-1, 0, 5f))
             addView(status, LinearLayout.LayoutParams(-1, -2))
             addView(answerRow, LinearLayout.LayoutParams(-1, 0, 2f))
-            addView(row(big("PLAY", "Mula LENSA", Color.rgb(20, 120, 60)) { play() },
-                        big("STOP", "Hentikan LENSA", Color.rgb(150, 30, 30)) { stop() }), LinearLayout.LayoutParams(-1, 0, 2f))
-            addView(row(big("TERANGKAN", "Terangkan sekeliling", Color.rgb(20, 70, 150)) { askB(describe = true) },
+            addView(row(big("MAIN", "Mula LENSA", Color.rgb(20, 120, 60)) { play() },
+                        big("HENTI", "Hentikan LENSA", Color.rgb(150, 30, 30)) { stop() }), LinearLayout.LayoutParams(-1, 0, 2f))
+            addView(row(big("TERANG", "Terangkan sekeliling", Color.rgb(20, 70, 150)) { askB(describe = true) },
                         big("BACA", "Baca tulisan", Color.rgb(100, 40, 140)) { askB(describe = false) }), LinearLayout.LayoutParams(-1, 0, 2f))
-            addView(mapButton, LinearLayout.LayoutParams(-1, -2))
         })
-        status.text = if (key == null) "Tekan PLAY untuk mula · (Loop B: tiada kunci API dalam APK ini)" else "Tekan PLAY untuk mula"
+        status.text = if (key == null) "Tekan MAIN untuk mula · (Loop B: tiada kunci API dalam APK ini)" else "Tekan MAIN untuk mula"
     }
 
     private fun showMapServer() {
-        mapButton.text = if (hazardMap.enabled) "PETA BAHAYA: ${hazardMap.url}  ·  ${hazardMap.me}"
-                         else "PETA BAHAYA: tutup · tekan untuk sambung ke pelayan"
+        mapButton.text = if (hazardMap.enabled) "PETA: ${hazardMap.url}  ·  ${hazardMap.me}"
+                         else "PETA: tutup · tekan untuk sambung ke pelayan"
     }
 
-    /** The hazard server's address, e.g. 192.168.1.20:8000 (the laptop running server.py). Empty = off. */
+    /** The hazard server's address: a hosted https://… address, or the laptop running server.py
+     *  on the same Wi-Fi (e.g. 192.168.1.20:8000). Empty = off. */
     private fun editMapServer() {
         val input = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
@@ -134,7 +144,8 @@ class MainActivity : AppCompatActivity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Pelayan peta bahaya")
-            .setMessage("Alamat yang server.py paparkan (Wi-Fi yang sama). Kosongkan untuk tutup.")
+            .setMessage("Alamat pelayan dalam talian (https://…), atau alamat yang server.py paparkan " +
+                "(Wi-Fi yang sama). Kosongkan untuk tutup.")
             .setView(input)
             .setPositiveButton("Simpan") { _, _ ->
                 hazardMap.url = input.text.toString()
@@ -181,10 +192,10 @@ class MainActivity : AppCompatActivity() {
         speaker.clear()
         overlay.clear()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        status.text = "Dihentikan. Tekan PLAY untuk mula"
+        status.text = "Dihentikan. Tekan MAIN untuk mula"
     }
 
-    /** TERANGKAN / BACA — works anytime; the photo is taken on Loop B's background thread. */
+    /** TERANG / BACA — works anytime; the photo is taken on Loop B's background thread. */
     private fun askB(describe: Boolean) {
         if (!hasCamera()) { ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQ_ASK); return }
         if (describe) loopB.describe(::photo) else loopB.readSign(::photo)
@@ -195,7 +206,7 @@ class MainActivity : AppCompatActivity() {
         when {
             !hasCamera() -> status.text = "LENSA perlukan kamera"   // camera is one of several asked for
             code == REQ_PLAY -> play()
-            else -> status.text = "Kamera dibenarkan — tekan TERANGKAN / BACA semula"
+            else -> status.text = "Kamera dibenarkan — tekan TERANG / BACA semula"
         }
     }
 
@@ -237,7 +248,7 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    /** One JPEG for Loop B (called on Loop B's background thread). While PLAY runs: a still from
+    /** One JPEG for Loop B (called on Loop B's background thread). While MAIN runs: a still from
      *  the bound capture (or the last analysis frame). Stopped: open the camera just for this photo. */
     private fun photo(): ByteArray? {
         val live = capture

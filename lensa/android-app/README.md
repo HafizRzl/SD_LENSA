@@ -5,8 +5,8 @@ line), and a 2×2 grid of big buttons below:
 
 | | |
 |---|---|
-| **PLAY** — Loop A on: back camera → both detectors → rules → Husein voice | **STOP** — Loop A off |
-| **TERANGKAN** — Loop B: describe the scene (Gemini, online) | **BACA** — Loop B: read a sign (Gemini, online) |
+| **MAIN** (play) — Loop A on: back camera → both detectors → rules → Husein voice | **HENTI** (stop) — Loop A off |
+| **TERANG** — Loop B: describe the scene (Gemini, online) | **BACA** — Loop B: read a sign (Gemini, online) |
 
 The brain is the desktop beta ported 1:1 to Kotlin — `Rules.kt`, `PacmanMap.kt`, `Tracking.kt`,
 `LoopB.kt` — and `GoldenParityTest` / `LoopBTest` prove it says exactly what the Python says
@@ -15,8 +15,8 @@ The brain is the desktop beta ported 1:1 to Kotlin — `Rules.kt`, `PacmanMap.kt
 Not yet: the ESP32 head unit.
 
 ## Hazard map (v0.5)
-A **PETA BAHAYA** button at the bottom sets the hazard map server (the laptop running `../../server.py`,
-same Wi-Fi, e.g. `192.168.1.20:8000`; empty = off). While PLAY runs, `HazardMap.kt`:
+A **PETA** button at the top sets the hazard map server (the laptop running `../../server.py`,
+same Wi-Fi, e.g. `192.168.1.20:8000`; empty = off). While MAIN runs, `HazardMap.kt`:
 - **Asks after you pass a fixed hazard.** A confirmed pothole / broken road / drain / open, displaced or
   broken manhole cover that came close (box bottom below 60% of the frame) and then left the view for
   2 s counts as passed. LENSA asks in English: *"Dangerous hazard found: pothole. Do you want to log it?"*
@@ -27,11 +27,11 @@ same Wi-Fi, e.g. `192.168.1.20:8000`; empty = off). While PLAY runs, `HazardMap.
   reported (polls `GET /api/hazards` every 5 s).
 - Hazard guidance pauses while the map talks or listens; urgent "Berhenti!/Awas!" lines still cut in.
 
-Needs camera, location and microphone permissions (asked on PLAY). The app ID is `my.lensa.map`, so it
+Needs camera, location and microphone permissions (asked on MAIN). The app ID is `my.lensa.map`, so it
 installs next to the FYP build instead of replacing it. Calibration knobs: `PassWatcher` in `HazardMap.kt`.
 
-## Loop B (TERANGKAN / BACA)
-- Works **anytime**: while PLAY runs it takes a ~1600 px still from the live camera; when stopped it
+## Loop B (TERANG / BACA)
+- Works **anytime**: while MAIN runs it takes a ~1600 px still from the live camera; when stopped it
   opens the camera just for that one photo. Says "Sebentar" (Husein clip), sends the photo + the
   prompt (`assets/context/agents/loopb_*.md`) to Gemini, speaks the answer with Android TTS and
   shows it on screen for 15 s. Hazard warnings keep priority: an urgent "Berhenti!/Awas!" cuts in;

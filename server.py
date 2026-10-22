@@ -6,10 +6,13 @@ Run:   python server.py          walker app  -> http://localhost:8000/
        python server.py --demo   same, but a "day" lasts 1 minute, so fix-by deadlines and
                                  overdue reminders can be shown on stage
 Test:  python server.py --test
+Online (e.g. Render): start command `python server.py`. The host's PORT is used, and the public
+address (PUBLIC_URL, or Render's RENDER_EXTERNAL_URL) goes into agency email links. DEMO=1 = --demo.
 Stdlib only (http.server + sqlite3), nothing to pip install.
 """
 import json
 import math
+import os
 import re
 import secrets
 import socket
@@ -23,14 +26,14 @@ from urllib.parse import parse_qs, urlparse
 
 HERE = Path(__file__).parent
 DB_PATH = HERE / "hazards.db"   # delete this file to reset the demo
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))   # online hosts choose the port
 # ponytail: same type within this radius = same hazard. Phone GPS is ~5-10 m off per report,
 # so two reports of one drain can land ~20 m apart. Too big and two real drains merge.
 MATCH_M = 20
-DAY_S = 60 if "--demo" in sys.argv else 86400
+DAY_S = 60 if "--demo" in sys.argv or os.environ.get("DEMO") == "1" else 86400
 URGENT_DANGER = 9                       # danger >= this is URGENT
 URGENT_FIX_DAYS, NORMAL_FIX_DAYS = 2, 7  # fix-by deadline after the agency is emailed
-BASE_URL = f"http://localhost:{PORT}"   # replaced by the LAN address at startup (agency links)
+BASE_URL = f"http://localhost:{PORT}"   # replaced at startup: public or LAN address (agency links)
 
 # Real agencies for Seri Iskandar (UTP). For the hackathon every email goes to the inbox typed on the
 # admin board, not to them. ponytail: keyword routing; a real rollout needs a per-township table.
@@ -401,7 +404,8 @@ if __name__ == "__main__":
     except OSError:
         sys.exit(f"Port {PORT} is already in use: another copy of this server is running. Close it first.")
     db = connect()
-    BASE_URL = f"http://{lan_ip()}:{PORT}"
+    BASE_URL = (os.environ.get("PUBLIC_URL") or os.environ.get("RENDER_EXTERNAL_URL")
+                or f"http://{lan_ip()}:{PORT}").rstrip("/")
     print(f"LENSA hazard map on port {PORT}{'  [DEMO: 1 day = 1 minute]' if DAY_S == 60 else ''}")
     print(f"  walker app : http://localhost:{PORT}/   (phone: {BASE_URL}/ - see README for GPS/mic)")
     print(f"  admin board: http://localhost:{PORT}/admin.html")

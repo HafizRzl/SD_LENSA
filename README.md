@@ -167,14 +167,55 @@ python server.py
 
 Run `python server.py --demo` to make a day last one minute, so you can watch a case go overdue.
 
-**With the LENSA app:** build it from `lensa/android-app` (see its README) and install it on an
-Android phone on the same Wi-Fi as the computer running `server.py`. Tap **PETA BAHAYA** at the bottom,
-enter the address the server prints (for example `192.168.1.20:8000`), then press **PLAY** and allow the
-camera, location and microphone. Walk past a pothole or a damaged manhole cover and LENSA asks if you
-want to log it; answer by voice or with the **YES / NO** buttons. The app also warns you near hazards
-other walkers have logged, and tells you when they are repaired.
+### Test it with the LENSA app on your phone
 
-**On a phone, without the app:** open the address the server prints in Chrome to use the walker web app.
+You need the computer running `server.py` and an Android phone with the LENSA app (build it from
+`lensa/android-app`, see its README). Both must be on the same network. Public and campus Wi-Fi often
+stop devices from talking to each other, so the easiest setup is the phone's own hotspot.
+
+0. **Install the app.** Copy the APK to the phone and open it (allow installing unknown apps if asked).
+1. **Connect.** Turn on the phone's **hotspot** and connect the computer to it.
+2. **Start the server** on the computer:
+   ```bash
+   python server.py
+   ```
+   It prints a `phone:` address, for example `http://192.168.43.120:8000/`. Open
+   <http://localhost:8000/admin.html> on the computer to watch the township board.
+3. **Optional: check the connection.** On the phone, open `http://192.168.43.120:8000` (your address,
+   with `http://`) in Chrome. If the LENSA walker page loads, the phone can reach the server. This is only
+   a check; the app itself does not need Chrome. Skip it once you know the connection works.
+4. **Point the app at the server.** In LENSA, tap **PETA** at the top, enter the address without
+   `http://` (for example `192.168.43.120:8000`) and tap **Simpan**. The PETA button now shows the
+   address and your walker ID. This is the step that connects the app.
+5. **Start LENSA.** Press **MAIN** and allow the camera, location and microphone. Stand near a window or
+   outside so the phone gets a GPS fix.
+6. **Log a hazard.** Point the phone at a pothole or an open manhole (a photo on a screen works for a
+   desk test) so its box is coloured and in the lower half of the view, then point the phone away. About
+   two seconds later LENSA asks *"Dangerous hazard found: pothole. Do you want to log it?"* Say **yes**
+   or tap **YES**. An **orange** pin appears on the township board.
+7. **Confirm it as a second walker.** On the computer, open <http://localhost:8000/?user=B>, tap
+   **Start walk**, open **Test / demo backup**, tick **Fake GPS** and tap next to the pin. Simulate the
+   **same type** of hazard and answer **Yes**. The pin turns **red**: confirmed.
+8. **Get a warning.** Still as walker B, tap the map where you are standing, simulate **Open drain** and
+   answer **Yes**. Within about five seconds the phone says *"Caution. Possible open drain, about X
+   metres from you."*
+9. **Fix it.** On the township board, press **Email agency**, open the link from the email draft, then
+   press **Work started** and **Mark as fixed**. The pin turns **green** and the phone says *"Thank you.
+   The pothole you reported has been repaired."*
+
+| If you see or hear | Try |
+|---|---|
+| "Peta bahaya: tiada sambungan" | Do step 3. If the hotspot or server restarted, the address may have changed: update PETA |
+| "no GPS fix, so it cannot be logged" | Go near a window or outside, and check Location is on |
+| LENSA never asks | Get closer so the box is coloured and low in the view. It asks about the same type at most every 20 seconds |
+| It doesn't hear "yes" | Tap YES / NO instead |
+
+The other buttons: **HENTI** stops LENSA, **TERANG** describes the scene and **BACA** reads a sign aloud
+(both need a Google Gemini key, see `lensa/android-app/README.md`).
+
+### On a phone, without the app
+
+Open the address the server prints in Chrome to use the walker web app instead.
 Phones only allow GPS and the microphone on secure (HTTPS) pages. For a local test, open
 `chrome://flags` on the phone, enable **Insecure origins treated as secure** and add that address.
 A hosted deployment on HTTPS would not need this.

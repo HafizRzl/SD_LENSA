@@ -195,7 +195,7 @@ class HazardMap(
         }, "com.google.android.tts")
     }
 
-    /** PLAY pressed: GPS + polling on (if a server is set). */
+    /** MAIN pressed: GPS + polling on (if a server is set). */
     @SuppressLint("MissingPermission")   // caller checks ACCESS_FINE_LOCATION first
     fun start(hasLocation: Boolean) {
         if (!enabled) return
@@ -299,7 +299,7 @@ class HazardMap(
         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
     }
 
-    /** Every 5 s while PLAY runs: fetch the map, say at most one notice. */
+    /** Every 5 s while MAIN runs: fetch the map, say at most one notice. */
     private fun poll(g: Int) {
         if (!polling || g != gen) return
         if (!busy) runCatching {

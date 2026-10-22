@@ -40,6 +40,6 @@ if key and model and not key.startswith("PASTE") and not model.startswith("PASTE
     (DST / "loopb.bin").write_bytes(bytes(b ^ mask[i % len(mask)] for i, b in enumerate(raw)))
     print(f"Loop B: key + model '{model}' baked in (scrambled)")
 else:
-    print("Loop B: no key in desktop-beta/secrets.yaml — TERANGKAN/BACA will say 'Kunci API belum ditetapkan'")
+    print("Loop B: no key in desktop-beta/secrets.yaml — TERANG/BACA will say 'Kunci API belum ditetapkan'")
 mb = sum(f.stat().st_size for f in DST.rglob("*") if f.is_file()) / 1e6
 print(f"assets synced: context yaml, 2 models, {len(clips)} clips — {mb:.1f} MB -> {DST}")
